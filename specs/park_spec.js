@@ -63,7 +63,7 @@ describe ('Park', function(){
       park.addDino(dino1);
       park.addDino(dino2);
       park.addDino(dino3);
-      const actual = park.findDinoSpecies('Stegosaurus');
+      const actual = park.findDinoSpecies('stegosaurus');
       const expected = [dino1];
       assert.deepStrictEqual(actual, expected)
     });
@@ -77,13 +77,42 @@ describe ('Park', function(){
     });
 
     it('should be able to Calculate total number of visitors per year', function(){
+      park.addDino(dino1);
+      park.addDino(dino2);
+      park.addDino(dino3);
       const actual = park.totalAnnualVisitors();
-      assert.deepEqual(actual, 365000);
+      assert.strictEqual(actual, 365000);
     });
 
     it('should be able to Calculate the total revenue from ticket sales for one year', function(){
+      park.addDino(dino1);
+      park.addDino(dino2);
+      park.addDino(dino3);
       const actual = park.totalAnnualRevenue();
-      assert.deepEqual(actual, 2920000);
+      assert.strictEqual(actual, 2920000);
+    });
+
+    // extensions
+
+    it('should delete all dinos of particualr species', function(){
+      park.addDino(dino1);
+      park.addDino(dino2);
+      park.addDino(dino3);
+      park.killAll('stegosaurus');
+      assert.strictEqual(2, park.collection.length);
+    });
+
+    it('should collate info about dinos and their diets', function(){
+      park.addDino(dino1);
+      park.addDino(dino2);
+      park.addDino(dino3);
+      actual = park.get_diets();
+      expected = {
+        carnivore: 1,
+        herbivore: 1,
+        omnivore: 1
+      };
+      assert.deepStrictEqual(actual, expected)
 
     });
 

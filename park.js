@@ -1,6 +1,6 @@
 const Dino = require('./dino.js');
 
-const Park = function(name, ticketprice, collection){
+const Park = function(name, ticketprice, collection){  // do not need to initialize with dino array!
   this.name = name;
   this.ticketprice = ticketprice;
   this.collection = [];
@@ -15,6 +15,7 @@ Park.prototype.removeDino = function(dino) {
   let pos = this.collection.indexOf(dino)
   this.collection.splice(pos, 1);
   // starts at index of dino, removes 1 element
+  // can I do shift instead??
 };
 
 
@@ -34,9 +35,9 @@ Park.prototype.findPopularDino = function(){
 Park.prototype.findDinoSpecies = function(species){
   const dinos = this.collection;
 
-  species_array = [];
+  let species_array = [];
   for(let dino of dinos){
-    if(dino.species === species){
+    if(dino.species.toLowerCase() === species.toLowerCase()){
       species_array.push(dino);
     }
   }
@@ -45,29 +46,47 @@ Park.prototype.findDinoSpecies = function(species){
 
 Park.prototype.totalDailyVisitors = function(){
   const dinos = this.collection;
-  visitor_counter = 0;
+  let visitor_counter = 0;
   for(let dino of dinos){
      visitor_counter += dino.visitors
   }
-  return visitor_counter
+  return visitor_counter;
 };
 
 
-//  doesn't work. Scoping issue?? assert statement issue?
 Park.prototype.totalAnnualVisitors = function(){
-  // version1:
-  daily = this.totalDailyVisitors();
-  result = daily*365;
-  // version2:
-  // let result = (this.totalDailyVisitors()) * 365;
-  return result;
+  return this.totalDailyVisitors() * 365;
 };
 
-// this will work properly once the previous  function is working
-Park.prototype.totalAnnualRevenue = function(){
-  let visits = 365000 // let visits = this.totalAnnualVisitors();
-  return visits * this.ticketprice;
-}
 
+Park.prototype.totalAnnualRevenue = function(){
+  return this.totalAnnualVisitors() * this.ticketprice;
+};
+
+// extensions
+
+Park.prototype.killAll = function(species){
+  // loop backwards!!! b/c of mutating arrays in javascript....if going front to back, then the index is messed up in js internal counter
+  for(let i = this.collection.length -1; i >=0; i--){
+    let currentDino = this.collection[i];
+    if(currentDino.species.toLowerCase() === species.toLowerCase()){
+      this.collection.splice(i, 1);
+    }
+  }
+};
+
+Park.prototype.get_diets = function () {
+   // create empty object
+   let diets = {};
+  // loop thru dinos, check if key is
+  for(let dino of this.collection){
+    if(dino.diet in diets){
+      diets[dino.diet]++;
+    }else{
+      diets[dino.diet] = 1;
+    }
+  }
+  return diets;
+};
 
 module.exports = Park;
